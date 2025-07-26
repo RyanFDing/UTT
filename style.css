@@ -98,3 +98,40 @@ footer {
     font-size: 0.9em;
     color: #888;
 }
+
+#depth-control {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#depth-control button {
+    margin: 0;
+    padding: 5px 10px;
+    font-size: 1.2em;
+    min-width: 40px;
+}
+
+#depth-display {
+    font-size: 1.2em;
+    color: #61dafb;
+    font-weight: bold;
+    min-width: 120px;
+    text-align: center;
+}
+
+#depth-control button:disabled {
+    background-color: #555;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#depth-display {
+    font-size: 1.2em;
+    color: #61dafb;
+    font-weight: bold;
+    min-width: 140px; /* Increased width to accommodate "(locked)" text */
+    text-align: center;
+}

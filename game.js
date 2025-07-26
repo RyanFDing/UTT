@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const boardElement = document.getElementById('game-board');
     const statusText = document.getElementById('status-text');
     const newGameBtn = document.getElementById('new-game-btn');
+    const depthDecreaseBtn = document.getElementById('depth-decrease');
+    const depthIncreaseBtn = document.getElementById('depth-increase');
+    const depthDisplay = document.getElementById('depth-display');
 
     let bigBoard = createBigBoard();
     let currentPlayer = 'X';
@@ -10,7 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let nextBoardCol = -1;
     let isAITurn = false;
     let moveCount = 0;
-    const depth = 7; // AI difficulty depth
+    let depth = 7; // AI difficulty depth
+    let gameInProgress = false;
+    
 
     function createSmallBoard() {
         return {
@@ -22,6 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createBigBoard() {
         return Array(3).fill(null).map(() => Array(3).fill(null).map(() => createSmallBoard()));
+    }
+
+    function updateDepthDisplay() {
+        if (gameInProgress) {
+            depthDisplay.textContent = `AI Depth: ${depth} (locked)`;
+            depthDecreaseBtn.disabled = true;
+            depthIncreaseBtn.disabled = true;
+        } else {
+            depthDisplay.textContent = `AI Depth: ${depth}`;
+            depthDecreaseBtn.disabled = false;
+            depthIncreaseBtn.disabled = false;
+        }
     }
 
     function renderBoard() {
@@ -168,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
             statusText.textContent = `${overallWinner} Wins!`;
         }
         document.querySelectorAll('.small-board.active').forEach(b => b.classList.remove('active'));
+        gameInProgress = false; // Add this line
+        updateDepthDisplay(); // Add this line to update button states
     }
 
     function startNewGame() {
@@ -177,16 +196,37 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBoardRow = -1;
         nextBoardCol = -1;
         isAITurn = true; // It is the AI's turn
-        moveCount = 0; 
+        moveCount = 0;
+        gameInProgress = true; // Add this line
         statusText.textContent = "X's Turn (AI is thinking...)";
+        updateDepthDisplay(); // Add this line to update button states
         renderBoard();
         setTimeout(aiMove, 500); // Trigger the AI's first move
     }
-    
+
     boardElement.addEventListener('click', handleCellClick);
     newGameBtn.addEventListener('click', startNewGame);
     
-    startNewGame();
+    
+
+    // Depth control event listeners
+    depthDecreaseBtn.addEventListener('click', () => {
+        if (!gameInProgress && depth > 1) {
+            depth--;
+            updateDepthDisplay();
+        }
+    });
+
+    depthIncreaseBtn.addEventListener('click', () => {
+        if (!gameInProgress && depth < 10) {
+            depth++;
+            updateDepthDisplay();
+        }
+    });
+    updateDepthDisplay();
+    // Don't start a game automatically - wait for user to click "New Game"
+    statusText.textContent = "Click 'New Game' to start playing";
+    renderBoard(); // Show empty board
 });
 
 window.getAvailableMoves = (board, nextBr, nextBc) => {
