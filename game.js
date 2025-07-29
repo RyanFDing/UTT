@@ -189,7 +189,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDepthDisplay(); // Add this line to update button states
     }
 
+    function initialize() {
+        bigBoard = createBigBoard();
+        statusText.textContent = "Click 'New Game' to start!";
+        boardElement.style.pointerEvents = 'none'; // Makes the board unclickable
+        renderBoard();
+    }
     function startNewGame() {
+        boardElement.style.pointerEvents = 'auto';
         bigBoard = createBigBoard();
         currentPlayer = 'O'; // Set AI ('O') as the current player
         overallWinner = ' ';
@@ -207,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
     boardElement.addEventListener('click', handleCellClick);
     newGameBtn.addEventListener('click', startNewGame);
     
-    
 
     // Depth control event listeners
     depthDecreaseBtn.addEventListener('click', () => {
@@ -223,6 +229,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDepthDisplay();
         }
     });
+
+    initialize();
     updateDepthDisplay();
     // Don't start a game automatically - wait for user to click "New Game"
     statusText.textContent = "Click 'New Game' to start playing";
